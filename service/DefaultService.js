@@ -1,5 +1,7 @@
 'use strict';
-var utils = require('../utils/writer.js');
+const utils = require('../utils/writer.js');
+const GeoLocation = require('../models/geoLocation');
+const Worker = require('../models/worker');
 
 /**
  * returns all workers with a given home value
@@ -7,66 +9,33 @@ var utils = require('../utils/writer.js');
  * home String home to search against
  * returns List
  **/
-exports.workersFindByHomeGET = function (home) {
-  console.log('workersFindByHomeGET');
-  return new Promise(function (resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [{
-      "workerId": 0,
-      "name": "name",
-      "location": {
-        "latitude": 6.0274563,
-        "longitude": 1.4658129
-      },
-      "home": "home"
-    }, {
-      "workerId": 0,
-      "name": "name",
-      "location": {
-        "latitude": 6.0274563,
-        "longitude": 1.4658129
-      },
-      "home": "home"
-    }];
-    if (home === 'home') {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve(new utils.respondWithCode(400,));
+exports.workersFindByHomeHomeGET = function (home) {
+  console.log('workersGET');
+  return new Promise(async (resolve, reject) => {
+    try {
+      const worker = await Worker.find({ home: home })
+      resolve(worker);
+    } catch (err) {
+      console.log(err)
+      reject(new utils.respondWithCode(500,));
     }
   });
-}
-
+};
 
 /**
  * Returns all workers from the worker store
  *
  * returns List
  **/
-exports.workersGET = function () {
+exports.workersGET = async () => {
   console.log('workersGET');
-  return new Promise(function (resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [{
-      "workerId": 0,
-      "name": "Jimmy Jewel",
-      "location": {
-        "latitude": 3.3627422,
-        "longitude": 2.1234567
-      },
-      "home": "Swindon"
-    }, {
-      "workerId": 0,
-      "name": "Sweeney Todd",
-      "location": {
-        "latitude": 3.0274563,
-        "longitude": 2.4658129
-      },
-      "home": "Swindon"
-    }];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve(new utils.respondWithCode(400,));
+  return new Promise(async (resolve, reject) => {
+    try {
+      const workers = await Worker.find();
+      resolve(workers);
+    } catch (err) {
+      console.log(err);
+      reject(new utils.respondWithCode(500,));
     }
   });
 }
@@ -78,38 +47,29 @@ exports.workersGET = function () {
  * body Worker Worker object that needs to be added to the store (optional)
  * returns Worker
  **/
-exports.workersPOST = function (body) {
+exports.workersPOST = (body) => {
   console.log('workersPost');
-  console.log('body=', body);
-  return new Promise(function (resolve, reject) {
-    let examples = {};
-    examples['application/json'] = {
+  console.log(body)
+  return new Promise(async (resolve, reject) => {
+    const GeoLocation = {
+      "latitude": body.location.latitude,
+      "longitude": body.location.longitude
+    }
+    const worker = new Worker({
       "workerId": body.workerId,
       "name": body.name,
-      "location": {
-        "latitude": body.location.latitude,
-        "longitude": body.location.longitude,
-      },
+      "location": GeoLocation,
       "home": body.home
-    };
-    switch (body.workerId) {
-      case 21882100:
-        resolve(new utils.respondWithCode(200,));
-        break;
-      case 78112351:
-        resolve(new utils.respondWithCode(400,));    // Invalid id
-        break;
-      default:
-        if (Object.keys(examples).length > 0) {
-          console.log(examples[Object.keys(examples)[0]])
-          resolve(examples[Object.keys(examples)[0]]);
-        } else {
-          resolve();
-        }
+    });
+    try {
+      await worker.save();
+      resolve(new utils.respondWithCode(200,));
+    } catch (err) {
+      console.log(err);
+      reject(new utils.respondWithCode(500,));
     }
   });
 }
-
 
 /**
  * Update an existing worker record
@@ -117,43 +77,35 @@ exports.workersPOST = function (body) {
  * body Worker Complete Worker object with workerId (optional)
  * returns Worker
  **/
-exports.workersPUT = function (body) {
+exports.workersPUT = (body) => {
   console.log('workersPUT')
-  let examples = {};
-  examples['application/json'] = {
-    "workerId": body.workerId,
-    "name": body.name,
-    "location": {
-      "latitude": body.location.latitude,
-      "longitude": body.location.longitude,
-    },
-    "home": body.home
-  };
-  return new Promise(function (resolve, reject) {
-    switch (body.workerId) {
-      case 21882000:
-        resolve(new utils.respondWithCode(200,));
-        break;
-      case 78112351:
-        resolve(new utils.respondWithCode(400,));    // Invalid id
-        break;
-      case 218820099:
-        resolve(new utils.respondWithCode(401,));    // Invalid input
-        break;
-      case 21882202:
-        resolve(new utils.respondWithCode(404,));    // worker not found
-        break;
-      default:
-        console.log(examples[Object.keys(examples)[0]])
-        if (Object.keys(examples).length > 0) {
-          resolve(examples[Object.keys(examples)[0]]);
-        } else {
-          resolve();
-        }
+console.log('body=', body);
+  return new Promise(async (resolve, reject) => {
+    const updatedRecord = new Worker({
+      "workerId": body.workerId,
+      "name": body.name,
+      "location": {
+        "latitude": body.location.latitude,
+        "longitude": body.location.longitude,
+      },
+      "home": body.home
+    })
+    const worker = await Worker.find({ workerId: body.workerId });
+
+    try {
+      console.log(updatedRecord);
+
+      await Worker.findOneAndUpdate({_id: worker._id}, updatedRecord, {
+        new: true
+      });
+
+      resolve(new utils.respondWithCode(200,));
+    } catch (err) {
+      console.log(err);
+      reject(new utils.respondWithCode(500,));
     }
   });
 }
-
 
 /**
  * deletes a single worker
@@ -161,30 +113,23 @@ exports.workersPUT = function (body) {
  * workerId Long Id of worker to delete
  * no response value expected for this operation
  **/
-exports.workersWorkerIdDELETE = function (workerId) {
+exports.workersWorkerIdDELETE = (workerId) => {
   console.log('workersWorkerIdDELETE');
-  console.log('workerId=', workerId);
-  return new Promise(function (resolve, reject) {
-    switch (workerId) {
-      case 21882000:
-        resolve(new utils.respondWithCode(200,));
-        break;
-      case 218820099:
-        resolve(new utils.respondWithCode(400,));    // Invalid id
-        break;
-      case 21882002:
-        resolve(new utils.respondWithCode(404,));    // worker not found
-        break;
-      default:
-        if (Object.keys(examples).length > 0) {
-          resolve(examples[Object.keys(examples)[0]]);
-        } else {
-          resolve();
-        }
+  return new Promise(async (resolve, reject) => {
+    try {
+      const worker = await Worker.find({ workerId: workerId })
+      console.log('worker=', worker);
+      if (worker.length === 0) {
+        resolve(new utils.respondWithCode(404,));
+      };
+      await Worker.deleteOne({ workerId: workerId });
+      resolve(workerId);
+    } catch (err) {
+      console.log(err)
+      reject(new utils.respondWithCode(500,));
     }
   });
 }
-
 
 /**
  * returns a single worker
@@ -194,33 +139,16 @@ exports.workersWorkerIdDELETE = function (workerId) {
  **/
 exports.workersWorkerIdGET = function (workerId) {
   console.log('workersWorkerIdGET');
-  return new Promise(function (resolve, reject) {
-    let examples = {};
-    examples['application/json'] = {
-      "workerId": 21822000,
-      "name": "John Silver",
-      "location": {
-        "latitude": 6.0274563,
-        "longitude": 1.4658129
-      },
-      "home": "Las Vegas"
-    };
-    switch (workerId) {
-      case 21882000:
-        resolve(examples[Object.keys(examples)[0]]);
-        break;
-      case 218820099:
-        resolve(new utils.respondWithCode(400,));    // Invalid id
-        break;
-      case 21882002:
-        resolve(new utils.respondWithCode(404,));    // worker not found
-        break;
-      default:
-        if (Object.keys(examples).length > 0) {
-          resolve(examples[Object.keys(examples)[0]]);
-        } else {
-          resolve();
-        }
+  return new Promise(async (resolve, reject) => {
+    try {
+      const worker = await Worker.find({ workerId: workerId });
+      if (worker.length === 0) {
+        resolve(new utils.respondWithCode(404,));
+      }
+      resolve(worker);
+    } catch (err) {
+      console.log(err)
+      reject(new utils.respondWithCode(500,));
     }
   });
 }

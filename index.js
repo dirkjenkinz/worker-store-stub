@@ -3,6 +3,10 @@
 var path = require('path');
 var http = require('http');
 
+const mongoose = require('mongoose');
+const url = 'mongodb://localhost/WorkerDBex';
+mongoose.connect(url);
+
 var oas3Tools = require('oas3-tools');
 var serverPort = 8080;
 

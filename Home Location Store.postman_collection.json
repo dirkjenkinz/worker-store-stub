@@ -1,0 +1,749 @@
+{
+	"info": {
+		"_postman_id": "089b871b-91e1-4ff3-8793-5f443aeb34a6",
+		"name": "Home Location Store",
+		"description": "Location store for API training course\n\nContact Support:\n Name: API Support\n Email: support@example.com",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "locations",
+			"item": [
+				{
+					"name": "{home Location}",
+					"item": [
+						{
+							"name": "/locations/:homeLocation - success finding location",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/locations/:homeLocation",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"locations",
+										":homeLocation"
+									],
+									"variable": [
+										{
+											"key": "host",
+											"value": "{{host}}",
+											"description": "this value can be assigned by the service provider"
+										},
+										{
+											"key": "port",
+											"value": "{{port}}",
+											"description": " (This can only be one of 8081,8001)"
+										},
+										{
+											"key": "basepath",
+											"value": "{{basepath}}"
+										},
+										{
+											"key": "homeLocation",
+											"value": "aute cillum magna Excepteur",
+											"description": "(Required) Name of location to search against"
+										}
+									]
+								},
+								"description": "returns a single home location record"
+							},
+							"response": []
+						},
+						{
+							"name": "/locations/:homeLocation - invalid home location",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/locations/:homeLocation",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"locations",
+										":homeLocation"
+									],
+									"variable": [
+										{
+											"key": "homeLocation",
+											"value": "New York",
+											"description": "(Required) Name of location to search against"
+										}
+									]
+								},
+								"description": "returns a single home location record"
+							},
+							"response": []
+						},
+						{
+							"name": "/locations/:homeLocation - location not found",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/locations/:homeLocation",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"locations",
+										":homeLocation"
+									],
+									"variable": [
+										{
+											"key": "host",
+											"value": "{{host}}",
+											"description": "this value can be assigned by the service provider"
+										},
+										{
+											"key": "port",
+											"value": "{{port}}",
+											"description": " (This can only be one of 8081,8001)"
+										},
+										{
+											"key": "basepath",
+											"value": "{{basepath}}"
+										},
+										{
+											"key": "homeLocation",
+											"value": "aute cillum magna Excepteur",
+											"description": "(Required) Name of location to search against"
+										}
+									]
+								},
+								"description": "returns a single home location record"
+							},
+							"response": []
+						},
+						{
+							"name": "/locations/:homeLocation - success finding location",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/locations/:homeLocation",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"locations",
+										":homeLocation"
+									],
+									"variable": [
+										{
+											"key": "host",
+											"value": "{{host}}",
+											"description": "this value can be assigned by the service provider"
+										},
+										{
+											"key": "port",
+											"value": "{{port}}",
+											"description": " (This can only be one of 8081,8001)"
+										},
+										{
+											"key": "basepath",
+											"value": "{{basepath}}"
+										},
+										{
+											"key": "homeLocation",
+											"value": "-25178842",
+											"description": "(Required) name of home location to delete"
+										}
+									]
+								},
+								"description": "deletes a single location"
+							},
+							"response": []
+						},
+						{
+							"name": "/locations/:homeLocation - invalid id suppl;ied",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/locations/:homeLocation",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"locations",
+										":homeLocation"
+									],
+									"variable": [
+										{
+											"key": "homeLocation",
+											"value": "New York",
+											"description": "(Required) name of home location to delete"
+										}
+									]
+								},
+								"description": "deletes a single location"
+							},
+							"response": []
+						},
+						{
+							"name": "/locations/:homeLocation - location not found",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/locations/:homeLocation",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"locations",
+										":homeLocation"
+									],
+									"variable": [
+										{
+											"key": "host",
+											"value": "{{host}}",
+											"description": "this value can be assigned by the service provider"
+										},
+										{
+											"key": "port",
+											"value": "{{port}}",
+											"description": " (This can only be one of 8081,8001)"
+										},
+										{
+											"key": "basepath",
+											"value": "{{basepath}}"
+										},
+										{
+											"key": "homeLocation",
+											"value": "-25178842",
+											"description": "(Required) name of home location to delete"
+										}
+									]
+								},
+								"description": "deletes a single location"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "/locations - list all locations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/locations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"locations"
+							],
+							"variable": [
+								{
+									"key": "host",
+									"value": "{{host}}",
+									"description": "this value can be assigned by the service provider"
+								},
+								{
+									"key": "port",
+									"value": "{{port}}",
+									"description": " (This can only be one of 8081,8001)"
+								},
+								{
+									"key": "basepath",
+									"value": "{{basepath}}"
+								}
+							]
+						},
+						"description": "Returns all home locations from the home location store"
+					},
+					"response": []
+				},
+				{
+					"name": "/locations - worker added to store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"locationName\": \"dolore aute dolore dolor\",\n  \"location\": {\n    \"latitude\": 94573560.66138777,\n    \"longitude\": -19042156.76105991\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/locations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"locations"
+							],
+							"variable": [
+								{
+									"key": "host",
+									"value": "{{host}}",
+									"description": "this value can be assigned by the service provider"
+								},
+								{
+									"key": "port",
+									"value": "{{port}}",
+									"description": " (This can only be one of 8081,8001)"
+								},
+								{
+									"key": "basepath",
+									"value": "{{basepath}}"
+								}
+							]
+						},
+						"description": "Adds a new home location to the location store, returns the location record"
+					},
+					"response": []
+				},
+				{
+					"name": "/locations - invalid input",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"locationName\": \"dolore aute dolore dolor\",\n  \"location\": {\n    \"latitude\": 94573560.66138777,\n    \"longitude\": -19042156.76105991\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/locations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"locations"
+							],
+							"variable": [
+								{
+									"key": "host",
+									"value": "{{host}}",
+									"description": "this value can be assigned by the service provider"
+								},
+								{
+									"key": "port",
+									"value": "{{port}}",
+									"description": " (This can only be one of 8081,8001)"
+								},
+								{
+									"key": "basepath",
+									"value": "{{basepath}}"
+								}
+							]
+						},
+						"description": "Adds a new home location to the location store, returns the location record"
+					},
+					"response": []
+				},
+				{
+					"name": "/locations - update location record",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"locationName\": \"dolore aute dolore dolor\",\n  \"location\": {\n    \"latitude\": 94573560.66138777,\n    \"longitude\": -19042156.76105991\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/locations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"locations"
+							],
+							"variable": [
+								{
+									"key": "host",
+									"value": "{{host}}",
+									"description": "this value can be assigned by the service provider"
+								},
+								{
+									"key": "port",
+									"value": "{{port}}",
+									"description": " (This can only be one of 8081,8001)"
+								},
+								{
+									"key": "basepath",
+									"value": "{{basepath}}"
+								}
+							]
+						},
+						"description": "Update an existing location record"
+					},
+					"response": []
+				},
+				{
+					"name": "/locations - invalid id supplied",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"locationName\": \"dolore aute dolore dolor\",\n  \"location\": {\n    \"latitude\": 94573560.66138777,\n    \"longitude\": -19042156.76105991\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/locations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"locations"
+							],
+							"variable": [
+								{
+									"key": "host",
+									"value": "{{host}}",
+									"description": "this value can be assigned by the service provider"
+								},
+								{
+									"key": "port",
+									"value": "{{port}}",
+									"description": " (This can only be one of 8081,8001)"
+								},
+								{
+									"key": "basepath",
+									"value": "{{basepath}}"
+								}
+							]
+						},
+						"description": "Update an existing location record"
+					},
+					"response": []
+				},
+				{
+					"name": "/locations - location not found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"locationName\": \"dolore aute dolore dolor\",\n  \"location\": {\n    \"latitude\": 94573560.66138777,\n    \"longitude\": -19042156.76105991\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/locations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"locations"
+							],
+							"variable": [
+								{
+									"key": "host",
+									"value": "{{host}}",
+									"description": "this value can be assigned by the service provider"
+								},
+								{
+									"key": "port",
+									"value": "{{port}}",
+									"description": " (This can only be one of 8081,8001)"
+								},
+								{
+									"key": "basepath",
+									"value": "{{basepath}}"
+								}
+							]
+						},
+						"description": "Update an existing location record"
+					},
+					"response": []
+				},
+				{
+					"name": "/locations - invalid input",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"locationName\": \"dolore aute dolore dolor\",\n  \"location\": {\n    \"latitude\": 94573560.66138777,\n    \"longitude\": -19042156.76105991\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/locations",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"locations"
+							],
+							"variable": [
+								{
+									"key": "host",
+									"value": "{{host}}",
+									"description": "this value can be assigned by the service provider"
+								},
+								{
+									"key": "port",
+									"value": "{{port}}",
+									"description": " (This can only be one of 8081,8001)"
+								},
+								{
+									"key": "basepath",
+									"value": "{{basepath}}"
+								}
+							]
+						},
+						"description": "Update an existing location record"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "localhost",
+			"type": "any",
+			"description": {
+				"content": "this value can be assigned by the service provider",
+				"type": "text/plain"
+			}
+		},
+		{
+			"key": "port",
+			"value": "8081",
+			"type": "any",
+			"description": {
+				"content": " (This can only be one of 8081,8001)",
+				"type": "text/plain"
+			}
+		},
+		{
+			"key": "basepath",
+			"value": "v1",
+			"type": "any",
+			"description": {
+				"content": "",
+				"type": "text/plain"
+			}
+		},
+		{
+			"key": "baseUrl",
+			"value": "http://{{host}}:{{port}}/{{basepath}}",
+			"type": "string"
+		}
+	]
+}
