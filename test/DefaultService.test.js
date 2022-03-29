@@ -31,9 +31,7 @@ describe('get worker by id', () => {
 describe('remove worker from database', () => {
   it('should return 200 when worker deleted', async () => {
     mockingoose(Worker).toReturn(
-      {
-        code: 200, payload: undefined
-      },
+      { acknowledged: true, deletedCount: 1 }
     );
     const response = await workersWorkerIdDELETE(12345678);
     expect(response.code).toBe(200);
@@ -109,7 +107,7 @@ describe('add a worker to the database', () => {
   it('should return a 200 return code', async () => {
     const body =
     {
-      "workerId": 12345678,
+      "workerId": 11223344,
       "name": 'Bridget Bardot',
       "location": {
         "latitude": '122.3232',
@@ -119,7 +117,13 @@ describe('add a worker to the database', () => {
     };
     mockingoose(Worker).toReturn(
       {
-        code: 200, payload: undefined
+        "workerId": 11223344,
+        "name": 'Bridget Bardot',
+        "location": {
+          "latitude": '122.3232',
+          "longitude": '-8.212',
+        },
+        "home": 'Zurich'
       }, 'save');
     const response = await workersPOST(body);
     expect(response.code).toBe(200);
@@ -140,7 +144,13 @@ describe('change worker details', () => {
     };
     mockingoose(Worker).toReturn(
       {
-        code: 200, payload: undefined
+        "workerId": 12345678,
+        "name": 'Bridget Jones',
+        "location": {
+          "latitude": '20.22',
+          "longitude": '-0.3443',
+        },
+        "home": 'London'
       }, 'findOneAndUpdate');
     const response = await workersPUT(body);
     expect(response.code).toBe(200);
