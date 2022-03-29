@@ -1,113 +1,148 @@
 const { expect, test } = require('@jest/globals');
+const mockingoose = require('mockingoose');
+const Worker = require('../models/worker');
+
 const {
-  workersFindByHomeGET,
+  workersFindByHomeHomeGET,
   workersGET,
   workersPOST,
-  workersPUT
+  workersPUT,
+  workersWorkerIdGET,
+  workersWorkerIdDELETE
 } = require('../service/DefaultService');
 
-const homeList = [{
-  "workerId": 0,
-  "name": "name",
-  "location": {
-    "latitude": 6.0274563,
-    "longitude": 1.4658129
-  },
-  "home": "home"
-}, {
-  "workerId": 0,
-  "name": "name",
-  "location": {
-    "latitude": 6.0274563,
-    "longitude": 1.4658129
-  },
-  "home": "home"
-}];
+describe('get worker by id', () => {
+  it('should return 1 worker record', async () => {
+    mockingoose(Worker).toReturn(
+      {
+        "workerId": 12345678,
+        "name": 'Bridget Bardot',
+        "location": {
+          "latitude": '122.3232',
+          "longitude": '-8.212',
+        },
+        "home": 'Zurich'
+      }, 'findOne');
+    const response = await workersWorkerIdGET(12345678);
+    expect(response.name).toBe('Bridget Bardot');
+  })
+});
 
-const allWorkers = [{
-  "workerId": 0,
-  "name": "Jimmy Jewel",
-  "location": {
-    "latitude": 3.3627422,
-    "longitude": 2.1234567
-  },
-  "home": "Swindon"
-}, {
-  "workerId": 0,
-  "name": "Sweeney Todd",
-  "location": {
-    "latitude": 3.0274563,
-    "longitude": 2.4658129
-  },
-  "home": "Swindon"
-}];
+describe('remove worker from database', () => {
+  it('should return 200 when worker deleted', async () => {
+    mockingoose(Worker).toReturn(
+      {
+        code: 200, payload: undefined
+      },
+    );
+    const response = await workersWorkerIdDELETE(12345678);
+    expect(response.code).toBe(200);
+  })
+});
 
-const worker = {
-  "workerId": 'id',
-  "name": 'name',
-  "location": {
-    "latitude": 'latitude',
-    "longitude": 'longitude',
-  },
-  "home": 'home'
-};
-
-describe('Find workers by home', () => {
-  it('should return a partial list of workers', async () => {
-    const response = await workersFindByHomeGET('home');
-    expect(response).toEqual(homeList);
+describe('get workers by home', () => {
+  it('should return a list of workers living at a specified place', async () => {
+    mockingoose(Worker).toReturn(
+      [
+        {
+          "workerId": 12345678,
+          "name": 'Bridget Bardot',
+          "location": {
+            "latitude": '122.3232',
+            "longitude": '-8.212',
+          },
+          "home": 'Zurich'
+        },
+        {
+          "workerId": 23456789,
+          "name": 'Hugh Jarse',
+          "location": {
+            "latitude": '122.3232',
+            "longitude": '-8.212',
+          },
+          "home": 'Zurich'
+        }
+      ], 'find');
+    const response = await workersFindByHomeHomeGET(12345678);
+    expect(response[1].name).toBe('Hugh Jarse');
   });
 });
 
-describe('Return workers from the worker store', () => {
-  it('should return a list of all workers', async () => {
-    const response = await workersGET();
-    expect(response).toEqual(allWorkers);
-  });
+describe('get all workers', () => {
+  it('should return a list of all workers in the workers store database', async () => {
+    mockingoose(Worker).toReturn(
+      [
+        {
+          "workerId": 12345678,
+          "name": 'Bridget Bardot',
+          "location": {
+            "latitude": '122.3232',
+            "longitude": '-8.212324',
+          },
+          "home": 'Zurich'
+        },
+        {
+          "workerId": 12349876,
+          "name": 'Gene Autrey',
+          "location": {
+            "latitude": '132.9999',
+            "longitude": '-1.3456565',
+          },
+          "home": 'Rome'
+        },
+        {
+          "workerId": 23456789,
+          "name": 'Hugh Jarse',
+          "location": {
+            "latitude": '122.3232',
+            "longitude": '-8.212325',
+          },
+          "home": 'Zurich'
+        }
+      ], 'find');
+    const response = await workersGET(12345678);
+    expect(response[1].name).toBe('Gene Autrey');
+  })
 });
 
-describe('Add worker to the worker store', () => {
-  it('should return 200 when id = 21882100', async () => {
-    worker.workerId = 21882100;
-    const response = await workersPOST(worker);
-    expect(response.code).toEqual(200);
-  });
-  it('should return 400 when id is invalid', async () => {
-    worker.workerId = 78112351;
-    const response = await workersPOST(worker);
-    expect(response.code).toEqual(400);
-  });
-  it('should return worker details when id is valid', async () => {
-    worker.workerId = 12345678;
-    const response = await workersPOST(worker);
-    expect(response).toEqual(worker);
-  });
-})
+describe('add a worker to the database', () => {
+  it('should return a 200 return code', async () => {
+    const body =
+    {
+      "workerId": 12345678,
+      "name": 'Bridget Bardot',
+      "location": {
+        "latitude": '122.3232',
+        "longitude": '-8.212',
+      },
+      "home": 'Zurich'
+    };
+    mockingoose(Worker).toReturn(
+      {
+        code: 200, payload: undefined
+      }, 'save');
+    const response = await workersPOST(body);
+    expect(response.code).toBe(200);
+  })
+});
 
-describe('Update worker details', () => {
-  it('should return 200 when id = 21882000', async () => {
-    worker.workerId = 21882000;
-    const response = await workersPUT(worker);
-    expect(response.code).toEqual(200);
-  });
-  it('should return 400 when id is invalid', async () => {
-    worker.workerId = 78112351;
-    const response = await workersPUT(worker);
-    expect(response.code).toEqual(400);
-  });
-  it('should return 401 when input is invalid', async () => {
-    worker.workerId = 218820099;
-    const response = await workersPUT(worker);  
-    expect(response.code).toEqual(401);
-  });
-  it('should return 404 when worker is not found', async () => {
-    worker.workerId = 21882202;
-    const response = await workersPUT(worker);
-    expect(response.code).toEqual(404);
-  });
-  it('should return worker details when id is valid', async () => {
-    worker.workerId = 12345678;
-    const response = await workersPUT(worker);
-    expect(response).toEqual(worker);
-  });
-})
+describe('change worker details', () => {
+  it('should return a 200 return code', async () => {
+    const body =
+    {
+      "workerId": 12345678,
+      "name": 'Bridget Jones',
+      "location": {
+        "latitude": '20.22',
+        "longitude": '-0.3443',
+      },
+      "home": 'London'
+    };
+    mockingoose(Worker).toReturn(
+      {
+        code: 200, payload: undefined
+      }, 'findOneAndUpdate');
+    const response = await workersPUT(body);
+    expect(response.code).toBe(200);
+  })
+});

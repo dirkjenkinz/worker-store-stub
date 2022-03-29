@@ -1,7 +1,7 @@
 'use strict';
 const utils = require('../utils/writer.js');
-const GeoLocation = require('../models/geoLocation');
 const Worker = require('../models/worker');
+const { logger } = require('../utils/logger.js');
 
 /**
  * returns all workers with a given home value
@@ -10,13 +10,14 @@ const Worker = require('../models/worker');
  * returns List
  **/
 exports.workersFindByHomeHomeGET = function (home) {
-  console.log('workersGET');
+  logger.info('workersFindByHomeGET');
+  logger.debug('home=', home);
   return new Promise(async (resolve, reject) => {
     try {
       const worker = await Worker.find({ home: home })
       resolve(worker);
     } catch (err) {
-      console.log(err)
+      logger.error(err)
       reject(new utils.respondWithCode(500,));
     }
   });
@@ -28,13 +29,13 @@ exports.workersFindByHomeHomeGET = function (home) {
  * returns List
  **/
 exports.workersGET = async () => {
-  console.log('workersGET');
+  logger.info('workersGET');
   return new Promise(async (resolve, reject) => {
     try {
       const workers = await Worker.find();
       resolve(workers);
     } catch (err) {
-      console.log(err);
+      logger.error(err);
       reject(new utils.respondWithCode(500,));
     }
   });
@@ -48,8 +49,8 @@ exports.workersGET = async () => {
  * returns Worker
  **/
 exports.workersPOST = (body) => {
-  console.log('workersPost');
-  console.log(body)
+  logger.info('workersPost');
+  logger.debug('body=', body);
   return new Promise(async (resolve, reject) => {
     const GeoLocation = {
       "latitude": body.location.latitude,
@@ -65,7 +66,7 @@ exports.workersPOST = (body) => {
       await worker.save();
       resolve(new utils.respondWithCode(200,));
     } catch (err) {
-      console.log(err);
+      logger.error(err);
       reject(new utils.respondWithCode(500,));
     }
   });
@@ -78,34 +79,23 @@ exports.workersPOST = (body) => {
  * returns Worker
  **/
 exports.workersPUT = (body) => {
-  console.log('workersPUT')
-console.log('body=', body);
+  logger.info('workersPUT');
+  logger.debug('body=', body);
   return new Promise(async (resolve, reject) => {
-    const updatedRecord = new Worker({
-      "workerId": body.workerId,
-      "name": body.name,
-      "location": {
-        "latitude": body.location.latitude,
-        "longitude": body.location.longitude,
-      },
-      "home": body.home
-    })
-    const worker = await Worker.find({ workerId: body.workerId });
-
     try {
-      console.log(updatedRecord);
-
-      await Worker.findOneAndUpdate({_id: worker._id}, updatedRecord, {
-        new: true
-      });
-
+      const id = body.workerId.toString();
+      let resp = await Worker.findOneAndUpdate(
+        { workerId: id },
+        { $set: { home: body.home } },
+        { new: true }
+      );
       resolve(new utils.respondWithCode(200,));
     } catch (err) {
-      console.log(err);
+      logger.error(err);
       reject(new utils.respondWithCode(500,));
     }
   });
-}
+};
 
 /**
  * deletes a single worker
@@ -114,18 +104,18 @@ console.log('body=', body);
  * no response value expected for this operation
  **/
 exports.workersWorkerIdDELETE = (workerId) => {
-  console.log('workersWorkerIdDELETE');
+  logger.info('workersWorkerIdDELETE');
+  logger.debug('workerId=', workerId)
   return new Promise(async (resolve, reject) => {
     try {
       const worker = await Worker.find({ workerId: workerId })
-      console.log('worker=', worker);
       if (worker.length === 0) {
         resolve(new utils.respondWithCode(404,));
       };
       await Worker.deleteOne({ workerId: workerId });
-      resolve(workerId);
+      resolve(new utils.respondWithCode(200,));
     } catch (err) {
-      console.log(err)
+      logger.error(err)
       reject(new utils.respondWithCode(500,));
     }
   });
@@ -138,16 +128,17 @@ exports.workersWorkerIdDELETE = (workerId) => {
  * returns Worker
  **/
 exports.workersWorkerIdGET = function (workerId) {
-  console.log('workersWorkerIdGET');
+  logger.info('workersWorkerIdGET');
+  logger.debug('workerId=', workerId);
   return new Promise(async (resolve, reject) => {
     try {
-      const worker = await Worker.find({ workerId: workerId });
+      const worker = await Worker.findOne({ workerId: workerId });
       if (worker.length === 0) {
         resolve(new utils.respondWithCode(404,));
       }
       resolve(worker);
     } catch (err) {
-      console.log(err)
+      logger.error(err)
       reject(new utils.respondWithCode(500,));
     }
   });

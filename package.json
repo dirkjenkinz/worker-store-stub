@@ -21,6 +21,8 @@
     "oas3-tools": "^2.2.3"
   },
   "devDependencies": {
-    "mongoose": "^6.2.7"
+    "mockingoose": "^2.15.2",
+    "mongoose": "^6.2.7",
+    "winston": "^3.6.0"
   }
 }
