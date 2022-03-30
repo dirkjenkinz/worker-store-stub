@@ -11,10 +11,10 @@ const { logger } = require('../utils/logger.js');
  **/
 exports.workersFindByHomeHomeGET = function (home) {
   logger.info('workersFindByHomeGET');
-  logger.debug('home=', home);
+  logger.debug('home='+home);
   return new Promise(async (resolve, reject) => {
     try {
-      const worker = await Worker.find({ home: home })
+      const worker = await Worker.find({ home: home });
       resolve(worker);
     } catch (err) {
       logger.error(err)
@@ -80,18 +80,28 @@ exports.workersPOST = (body) => {
  **/
 exports.workersPUT = (body) => {
   logger.info('workersPUT');
-  logger.debug('body=', body);
   return new Promise(async (resolve, reject) => {
     try {
       const id = body.workerId.toString();
-      let resp = await Worker.findOneAndUpdate(
+      await Worker.findOneAndUpdate(
         { workerId: id },
         { $set: { home: body.home } },
         { new: true }
       );
+      await Worker.findOneAndUpdate(
+        { workerId: id },
+        { $set: { name: body.name } },
+        { new: true }
+      );
+      const resp = await Worker.findOneAndUpdate(
+        { workerId: id },
+        { $set: { location: body.location } },
+        { new: true }
+      );
+      logger.info('updated record='+resp)
       resolve(new utils.respondWithCode(200,));
     } catch (err) {
-      logger.error(err);
+      logger.error('error='+err);
       reject(new utils.respondWithCode(500,));
     }
   });
@@ -105,7 +115,7 @@ exports.workersPUT = (body) => {
  **/
 exports.workersWorkerIdDELETE = (workerId) => {
   logger.info('workersWorkerIdDELETE');
-  logger.debug('workerId=', workerId)
+  logger.debug('workerId='+workerId)
   return new Promise(async (resolve, reject) => {
     try {
       const worker = await Worker.find({ workerId: workerId })
@@ -129,7 +139,7 @@ exports.workersWorkerIdDELETE = (workerId) => {
  **/
 exports.workersWorkerIdGET = function (workerId) {
   logger.info('workersWorkerIdGET');
-  logger.debug('workerId=', workerId);
+  logger.debug('workerId='+workerId);
   return new Promise(async (resolve, reject) => {
     try {
       const worker = await Worker.findOne({ workerId: workerId });
